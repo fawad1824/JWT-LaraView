@@ -31,6 +31,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        User::where('id', Auth::user()->id)->update(['remember_token' => $token]);
         return response()->json([
             'status' => 'success',
             'user' => $user,
@@ -56,6 +57,7 @@ class AuthController extends Controller
         ]);
 
         $token = Auth::login($user);
+        User::where('id', $user->id)->update(['remember_token' => $token]);
         return response()->json([
             'status' => 'success',
             'message' => 'User created successfully',
