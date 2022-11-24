@@ -26,7 +26,7 @@ class AuthController extends Controller
         if (!$token) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unauthorized',
+                'message' => 'Email and Password Invalid',
             ], 401);
         }
 
@@ -38,6 +38,8 @@ class AuthController extends Controller
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
+                'name' => Auth::user()->name,
+                'Userid' => Auth::user()->id,
             ]
         ]);
     }
@@ -78,6 +80,11 @@ class AuthController extends Controller
         ]);
     }
 
+    public function me()
+    {
+        return response()->json($this->guard()->user());
+    }
+
     public function refresh()
     {
         return response()->json([
@@ -88,5 +95,15 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ]);
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\Guard
+     */
+    public function guard()
+    {
+        return Auth::guard();
     }
 }
