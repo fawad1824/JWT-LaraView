@@ -13,10 +13,14 @@
                                     <div class="form-group">
                                         <input type="email" class="form-control" placeholder="Enter Email Address"
                                             v-model="form.email">
+                                        <small class="text-danger" v-if="errors.email">{{ errors.email[0] }}</small>
                                     </div>
                                     <div class="form-group">
                                         <input type="password" class="form-control" placeholder="Password"
                                             v-model="form.password">
+                                        <small class="text-danger" v-if="errors.password">{{ errors.password[0]
+                                        }}</small>
+
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
@@ -51,27 +55,40 @@
 
 <script type="text/javascript">
 export default {
+
+    created() {
+        if (User.loggedIn()) {
+            this.$router.push({ name: 'home' })
+        } else {
+            this.$router.push({ name: 'Login' })
+        }
+    },
+
     data() {
         return {
             form: {
                 email: null,
                 password: null,
+            }, errors: {
+
             }
         }
     },
     methods: {
         login() {
             axios.post('/api/login', this.form)
-                .then(res => console.log(res.data))
-                .catch(error => console.log(error.response.data))
+                .then(res => {
+                    User.responseAfterLogin(res)
+                    User.ReposnseError(res.data.message, res.data.status)
+                    this.$router.push({ name: 'home' })
+                }).catch(
+                    error => this.errors = error.response.data.errors
+                )
+                .catch(
+                    User.ReposnseError("Invalid Email and Password", 'warning')
+                )
         }
     }
 }
-
-
 </script>
 
-
-<style>
-
-</style>

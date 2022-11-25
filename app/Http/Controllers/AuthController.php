@@ -35,6 +35,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'user' => $user,
+            'message' => "Loggin Successfully",
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
@@ -49,7 +50,8 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|min:6|confirmed',
+            'password_confirmation' => 'required|min:6'
         ]);
 
         $user = User::create([
@@ -67,6 +69,8 @@ class AuthController extends Controller
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
+                'name' => Auth::user()->name,
+                'Userid' => Auth::user()->id,
             ]
         ]);
     }

@@ -21,7 +21,7 @@
                                 </form>
                                 <hr>
                                 <div class="text-center">
-                                    <router-link to="/login" class="font-weight-bold small">Login!</router-link>
+                                    <router-link to="/" class="font-weight-bold small">Login!</router-link>
                                 </div>
                                 <div class="text-center">
                                 </div>
